@@ -3,7 +3,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useEffect, useRef } from "react";
 import { NETWORK_CHAINS } from "../utility/chain";
-import { injected, walletconnect } from "../utility/connectors";
+import { Injected, WalletConnect } from "../utility/connectors";
 import {CONNECTORS} from '../utility/enum'
 
 const useConnectWallet = () => {
@@ -40,13 +40,15 @@ const useConnectWallet = () => {
   }, [chainId]);
 
 
-  const connect = async (chainId, connectType) => {
+  const connect = async (id, connectType) => {
+    console.log(id)
     let dataActivate = null;
     if (connectType === CONNECTORS.injected ) {
-      dataActivate = injected;
+      dataActivate = Injected;
     } else if (connectType === CONNECTORS.walletconnect) {
-      dataActivate = walletconnect(+chainId);
+      dataActivate = WalletConnect(+id);
     }
+    console.log(id, dataActivate)
     if (!dataActivate) return;
     await activate(dataActivate, undefined, true).catch((error) => {
       console.log("activate method", error)

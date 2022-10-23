@@ -5,6 +5,7 @@ import {
   AppBar,
   Link as MuiLink,
   Toolbar,
+  Typography,
 } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,12 +50,7 @@ export function Header() {
                   }}
                 >
                   <Box sx={{ display: { md: "block", xs: "none" } }} mt={1}>
-                    <Image
-                      src={`/logos/logo.png`}
-                      alt="Logo"
-                      width={265}
-                      height={34}
-                    />
+                    <Typography variant="h4">Logo</Typography>
                   </Box>
                   <Box
                     sx={{

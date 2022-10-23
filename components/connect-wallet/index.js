@@ -15,6 +15,7 @@ import { CONNECTORS } from "../../utility/enum";
 import { getErrorMessage } from "../../helpers/ethereum-error-helper";
 import useSwitchOrAddNetwork from "../../hooks/use-switch-network";
 import useConnectWallet from "../../hooks/use-connect-wallet";
+import { NETWORK_CHAINS } from "../../utility/chain";
 
 export function ConnectWallet() {
   const [callConnect, setCallConnect] = useState(false);
@@ -85,7 +86,6 @@ export function ConnectWallet() {
     setCallConnect(false);
     connectorMounted.current = undefined;
     setShowError(false);
-    dispatch(resetAuth());
   };
 
   const injectedConnect = async () => {
@@ -93,6 +93,7 @@ export function ConnectWallet() {
   };
 
   const handleConnect = async (connector) => {
+    const currentChainId = localStorage.getItem('currentChainID') ?? NETWORK_CHAINS[0].id;
     connectorMounted.current = connector;
     if (connector === CONNECTORS.injected) injectedConnect();
     else if (connector === CONNECTORS.walletconnect) {
@@ -103,11 +104,7 @@ export function ConnectWallet() {
   return (
     <>
       <Box>
-        {active &&
-        account &&
-        authToken &&
-        authProfile?.wallet_address &&
-        authProfile.wallet_address === account.toLowerCase() ? (
+        {active ? (
           <AccountState account={account} disconnect={handleDisconnect} />
         ) : (
           <Button

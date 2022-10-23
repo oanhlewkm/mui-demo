@@ -1,4 +1,4 @@
-const BLOCKCHAIN_NETWORK = process.env.NEXT_PUBLIC_BLOCKCHAIN ?? "testnet";
+const BLOCKCHAIN_NETWORK = process.env.NEXT_PUBLIC_BLOCKCHAIN ?? "mainnet";
 
 const MATIC = {
   name: "Matic Token",

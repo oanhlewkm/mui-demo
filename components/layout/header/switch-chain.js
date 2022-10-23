@@ -15,19 +15,27 @@ import useSwitchOrAddNetwork from "../../../hooks/use-switch-network";
 import { NETWORK_CHAINS } from "../../../utility/chain";
 
 const SwitchChainSelect = () => {
-  // const dispatch = useDispatch();
   const theme = useTheme();
   const switchOrAddNetwork = useSwitchOrAddNetwork();
   const { account } = useWeb3React();
 
-  const [selectedChainId, setSelectedChainId] = useState(
-    NETWORK_CHAINS[0].id
-  );
+  const [selectedChainId, setSelectedChainId] = useState();
   const [currentChain, setCurrentChain] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+  const [currentLocal, setCurrentLocal] = useState(false);
+  if (!currentLocal) {
+    if (typeof window !== 'undefined') {
+      setCurrentLocal(true);
+      console.log('You are on the browser')
+      // 👉️ can use localStorage here
+    } else {
+      console.log('You are on the server')
+      // 👉️ can't use localStorage
+    }
+  }
 
   useEffect(() => {
     const fetchCurrentChain = () => {
@@ -36,10 +44,20 @@ const SwitchChainSelect = () => {
       );
       if (!chain) chain = NETWORK_CHAINS[0];
       setCurrentChain(chain);
+      localStorage.setItem('currentChainID', `${chain.id}`)
     };
     if (selectedChainId) fetchCurrentChain();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChainId]);
+
+  useEffect(() => {
+    if (currentLocal && !selectedChainId) {
+      let chainId = localStorage.getItem('currentChainID');
+      if (!chainId) chainId = NETWORK_CHAINS[0].id
+      setSelectedChainId(chainId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChainId, currentLocal]);
 
   const handleSwitchChain = async (chain) => {
     try {
@@ -62,7 +80,8 @@ const SwitchChainSelect = () => {
       handleSwitchChain(chain);
     }
     else {
-      // dispatch(setCurrentChain(chain));
+      setCurrentChain(chain);
+      localStorage.setItem('currentChainID', `${chain.id}`)
     }
   };
 
