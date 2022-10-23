@@ -1,0 +1,1 @@
+const POLLING_INTERVAL = 12000;
